@@ -1,2 +1,5 @@
-# terratest-helper-caf
-Terratest helpers for CAF.
+# Terratest helper for CAF
+
+References:
+
+* [Terratest](https://github.com/gruntwork-io/terratest)
