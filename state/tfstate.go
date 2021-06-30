@@ -8,7 +8,9 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/gruntwork-io/terratest/modules/logger"
 	terraform "github.com/gruntwork-io/terratest/modules/terraform"
+	"github.com/stretchr/testify/require"
 )
 
 type Resource = map[string]interface{}
@@ -32,13 +34,26 @@ type TerraFormState struct {
 
 var TfState TerraFormState
 
+func ReadTerraformOutputJson(t *testing.T, Options *terraform.Options, key string) string {
+	args := []string{"output", "-no-color", "-json"}
+	args = append(args, key)
+
+	Options.Logger = logger.Discard
+	output, err := terraform.RunTerraformCommandAndGetStdoutE(t, Options, args...)
+
+	require.NoError(t, err)
+
+	//return the output
+	return output
+}
+
 func NewTerraformState(t *testing.T, key string) *TerraFormState {
 	os.Unsetenv("TF_DATA_DIR")
 	tfState := new(TerraFormState)
 	options := &terraform.Options{
 		TerraformDir: os.Getenv("STATE_FILE_PATH"),
 	}
-	outputJson := terraform.OutputJson(t, options, "objects")
+	outputJson := ReadTerraformOutputJson(t, options, "objects")
 	json.Unmarshal([]byte(outputJson), &tfState.Objects)
 	tfState.Key = key
 	tfState.SubscriptionID = os.Getenv("ARM_SUBSCRIPTION_ID")
