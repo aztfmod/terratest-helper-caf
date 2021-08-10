@@ -24,6 +24,10 @@ type StorageAccounts = map[string](AzureResource)
 type RecoveryVaults = map[string](AzureResource)
 type VNets = map[string](AzureResource)
 type AKSClusters = map[string](AzureResource)
+type SQLServers = map[string](AzureResource)
+type SQLDBs = map[string](AzureResource)
+type AppServices = map[string](AzureResource)
+type AppInsights = map[string](AzureResource)
 
 type TerraFormState struct {
 	Objects        Resource
@@ -179,6 +183,50 @@ func (tfState TerraFormState) GetAKSClusters() AKSClusters {
 	return azureResourceClusters
 }
 
+func (tfState TerraFormState) GetSQLServers() SQLServers {
+	resourceList := tfState.Objects[tfState.Key].(Resource)
+	sqlServers := resourceList["mssql_servers"].(Resource)
+	var m = make(SQLServers)
+	for key, item := range sqlServers {
+		server := item.(Resource)
+		m[key] = *NewAzureResource(server)
+	}
+	return m
+}
+
+func (tfState TerraFormState) GetSQLDBs() SQLDBs {
+	resourceList := tfState.Objects[tfState.Key].(Resource)
+	sqldbs := resourceList["mssql_databases"].(Resource)
+	var m = make(SQLDBs)
+	for key, item := range sqldbs {
+		server := item.(Resource)
+		m[key] = *NewAzureResource(server)
+	}
+	return m
+}
+
+func (tfState TerraFormState) GetAppServices() AppServices {
+	resourceList := tfState.Objects[tfState.Key].(Resource)
+	appServices := resourceList["app_services"].(Resource)
+	var m = make(AppServices)
+	for key, item := range appServices {
+		service := item.(Resource)
+		m[key] = *NewAzureResource(service)
+	}
+	return m
+}
+
+func (tfState TerraFormState) GetAppInsights() AppInsights {
+	resourceList := tfState.Objects[tfState.Key].(Resource)
+	appInsights := resourceList["application_insights"].(Resource)
+	var m = make(AppInsights)
+	for key, item := range appInsights {
+		service := item.(Resource)
+		m[key] = *NewAzureResource(service)
+	}
+	return m
+}
+
 func NewAzureResource(resource Resource) *AzureResource {
 	azureResource := new(AzureResource)
 	azureResource.Resource = resource
@@ -196,10 +244,20 @@ func (r AzureResource) GetName() string {
 func (r AzureResource) GetResource(key string) Resource {
 	return r.Resource[key].(Resource)
 }
+
 func (r AzureResource) GetTags() Resource {
 	return r.GetResource("tags")
 }
+
 func (r AzureResource) GetLevel() string {
 	tags := r.GetTags()
 	return tags["level"].(string)
+}
+
+func (r AzureResource) GetHostName() string {
+	return r.GetString("default_site_hostname")
+}
+
+func (r AzureResource) GetID() string {
+	return r.GetString("id")
 }
