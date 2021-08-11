@@ -1,18 +1,12 @@
 package caf_helper_tests
 
 import (
-	"fmt"
+	//"fmt"
 	"testing"
 
 	"github.com/aztfmod/terratest-helper-caf/state"
 	"github.com/stretchr/testify/assert"
 )
-
-func TestMyTest(t *testing.T){
-	t.Parallel()
-	fmt.Println("A Test")
-	
-}
 
 func TestLandingZoneKey(t *testing.T) {
 	t.Parallel()
@@ -20,7 +14,6 @@ func TestLandingZoneKey(t *testing.T) {
 
 	landingZoneKey := tfState.GetLandingZoneKey()
 
-	fmt.Println(landingZoneKey)
 	assert.Equal(t, "gears", landingZoneKey)
 }
 
@@ -29,10 +22,7 @@ func TestResourceGroups(t *testing.T) {
 	tfState := state.NewTerraformState(t, "gears")
 	resourceGroups := tfState.GetResourceGroups()
 
-	for _, resourceGroup := range resourceGroups {
-		name := resourceGroup.GetName()
-		fmt.Println(name)
-	}
+	assert.NotEmpty(t,resourceGroups)
 }
 
 func TestSQLServers(t *testing.T) {
@@ -40,10 +30,7 @@ func TestSQLServers(t *testing.T) {
 	tfState := state.NewTerraformState(t, "gears")
 	sqlServers := tfState.GetSQLServers()
 
-	for _, sqlServer := range sqlServers {
-		name := sqlServer.GetName()
-		fmt.Println(name)
-	}
+	assert.NotEmpty(t,sqlServers)
 }
 
 func TestAppInsights(t *testing.T) {
@@ -51,8 +38,5 @@ func TestAppInsights(t *testing.T) {
 	tfState := state.NewTerraformState(t, "gears")
 	appInsights := tfState.GetAppInsights()
 
-	for _, appInsight := range appInsights {
-		id := appInsight.GetID()
-		fmt.Println(id)
-	}
+	assert.NotEmpty(t,appInsights)
 }
