@@ -28,6 +28,8 @@ type SQLServers = map[string](AzureResource)
 type SQLDBs = map[string](AzureResource)
 type AppServices = map[string](AzureResource)
 type AppInsights = map[string](AzureResource)
+type StorageAccountQueues = map[string](AzureResource)
+type RandomStrings = map[string](AzureResource)
 
 type TerraFormState struct {
 	Objects        Resource
@@ -221,6 +223,28 @@ func (tfState TerraFormState) GetAppInsights() AppInsights {
 	appInsights := resourceList["application_insights"].(Resource)
 	var m = make(AppInsights)
 	for key, item := range appInsights {
+		service := item.(Resource)
+		m[key] = *NewAzureResource(service)
+	}
+	return m
+}
+
+func (tfState TerraFormState) GetStorageAccountQueues() StorageAccountQueues {
+	resourceList := tfState.Objects[tfState.Key].(Resource)
+	storageAccountQueues := resourceList["storage_account_queues"].(Resource)
+	var m = make(StorageAccountQueues)
+	for key, item := range storageAccountQueues {
+		service := item.(Resource)
+		m[key] = *NewAzureResource(service)
+	}
+	return m
+}
+
+func (tfState TerraFormState) GetRandomStrings() RandomStrings {
+	resourceList := tfState.Objects[tfState.Key].(Resource)
+	randomStrings := resourceList["random_strings"].(Resource)
+	var m = make(RandomStrings)
+	for key, item := range randomStrings {
 		service := item.(Resource)
 		m[key] = *NewAzureResource(service)
 	}

@@ -40,3 +40,19 @@ func TestAppInsights(t *testing.T) {
 
 	assert.NotEmpty(t,appInsights)
 }
+
+func TestStorageAccountQueues(t *testing.T) {
+	t.Parallel()
+	tfState := state.NewTerraformState(t, "gears")
+	storageAccountQueues := tfState.GetStorageAccountQueues()
+
+	assert.NotEmpty(t,storageAccountQueues)
+}
+
+func TestRandomStrings(t *testing.T) {
+	t.Parallel()
+	tfState := state.NewTerraformState(t, "gears")
+	randomStrings := tfState.GetRandomStrings()
+
+	assert.NotEmpty(t,randomStrings)
+}
