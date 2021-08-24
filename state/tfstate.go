@@ -30,6 +30,8 @@ type AppServices = map[string](AzureResource)
 type AppInsights = map[string](AzureResource)
 type StorageAccountQueues = map[string](AzureResource)
 type RandomStrings = map[string](AzureResource)
+type MachineLearningWorkspaces = map[string](AzureResource)
+type AzureContainerRegistries = map[string](AzureResource)
 
 type TerraFormState struct {
 	Objects        Resource
@@ -245,6 +247,28 @@ func (tfState TerraFormState) GetRandomStrings() RandomStrings {
 	randomStrings := resourceList["random_strings"].(Resource)
 	var m = make(RandomStrings)
 	for key, item := range randomStrings {
+		service := item.(Resource)
+		m[key] = *NewAzureResource(service)
+	}
+	return m
+}
+
+func (tfState TerraFormState) GetMachineLearningWorkspaces() MachineLearningWorkspaces {
+	resourceList := tfState.Objects[tfState.Key].(Resource)
+	machineLearningWorkspaces := resourceList["machine_learning_workspaces"].(Resource)
+	var m = make(MachineLearningWorkspaces)
+	for key, item := range machineLearningWorkspaces {
+		service := item.(Resource)
+		m[key] = *NewAzureResource(service)
+	}
+	return m
+}
+
+func (tfState TerraFormState) GetAzureContainerRegistries() AzureContainerRegistries {
+	resourceList := tfState.Objects[tfState.Key].(Resource)
+	azureContainerRegistries := resourceList["azure_container_registries"].(Resource)
+	var m = make(AzureContainerRegistries)
+	for key, item := range azureContainerRegistries {
 		service := item.(Resource)
 		m[key] = *NewAzureResource(service)
 	}
