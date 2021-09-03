@@ -24,6 +24,14 @@ type StorageAccounts = map[string](AzureResource)
 type RecoveryVaults = map[string](AzureResource)
 type VNets = map[string](AzureResource)
 type AKSClusters = map[string](AzureResource)
+type SQLServers = map[string](AzureResource)
+type SQLDBs = map[string](AzureResource)
+type AppServices = map[string](AzureResource)
+type AppInsights = map[string](AzureResource)
+type StorageAccountQueues = map[string](AzureResource)
+type RandomStrings = map[string](AzureResource)
+type MachineLearningWorkspaces = map[string](AzureResource)
+type AzureContainerRegistries = map[string](AzureResource)
 
 type TerraFormState struct {
 	Objects        Resource
@@ -179,6 +187,94 @@ func (tfState TerraFormState) GetAKSClusters() AKSClusters {
 	return azureResourceClusters
 }
 
+func (tfState TerraFormState) GetSQLServers() SQLServers {
+	resourceList := tfState.Objects[tfState.Key].(Resource)
+	sqlServers := resourceList["mssql_servers"].(Resource)
+	var m = make(SQLServers)
+	for key, item := range sqlServers {
+		server := item.(Resource)
+		m[key] = *NewAzureResource(server)
+	}
+	return m
+}
+
+func (tfState TerraFormState) GetSQLDBs() SQLDBs {
+	resourceList := tfState.Objects[tfState.Key].(Resource)
+	sqldbs := resourceList["mssql_databases"].(Resource)
+	var m = make(SQLDBs)
+	for key, item := range sqldbs {
+		server := item.(Resource)
+		m[key] = *NewAzureResource(server)
+	}
+	return m
+}
+
+func (tfState TerraFormState) GetAppServices() AppServices {
+	resourceList := tfState.Objects[tfState.Key].(Resource)
+	appServices := resourceList["app_services"].(Resource)
+	var m = make(AppServices)
+	for key, item := range appServices {
+		service := item.(Resource)
+		m[key] = *NewAzureResource(service)
+	}
+	return m
+}
+
+func (tfState TerraFormState) GetAppInsights() AppInsights {
+	resourceList := tfState.Objects[tfState.Key].(Resource)
+	appInsights := resourceList["application_insights"].(Resource)
+	var m = make(AppInsights)
+	for key, item := range appInsights {
+		service := item.(Resource)
+		m[key] = *NewAzureResource(service)
+	}
+	return m
+}
+
+func (tfState TerraFormState) GetStorageAccountQueues() StorageAccountQueues {
+	resourceList := tfState.Objects[tfState.Key].(Resource)
+	storageAccountQueues := resourceList["storage_account_queues"].(Resource)
+	var m = make(StorageAccountQueues)
+	for key, item := range storageAccountQueues {
+		service := item.(Resource)
+		m[key] = *NewAzureResource(service)
+	}
+	return m
+}
+
+func (tfState TerraFormState) GetRandomStrings() RandomStrings {
+	resourceList := tfState.Objects[tfState.Key].(Resource)
+	randomStrings := resourceList["random_strings"].(Resource)
+	var m = make(RandomStrings)
+	for key, item := range randomStrings {
+		service := item.(Resource)
+		m[key] = *NewAzureResource(service)
+	}
+	return m
+}
+
+func (tfState TerraFormState) GetMachineLearningWorkspaces() MachineLearningWorkspaces {
+	resourceList := tfState.Objects[tfState.Key].(Resource)
+	machineLearningWorkspaces := resourceList["machine_learning_workspaces"].(Resource)
+	var m = make(MachineLearningWorkspaces)
+	for key, item := range machineLearningWorkspaces {
+		service := item.(Resource)
+		m[key] = *NewAzureResource(service)
+	}
+	return m
+}
+
+func (tfState TerraFormState) GetAzureContainerRegistries() AzureContainerRegistries {
+	resourceList := tfState.Objects[tfState.Key].(Resource)
+	azureContainerRegistries := resourceList["azure_container_registries"].(Resource)
+	var m = make(AzureContainerRegistries)
+	for key, item := range azureContainerRegistries {
+		service := item.(Resource)
+		m[key] = *NewAzureResource(service)
+	}
+	return m
+}
+
 func NewAzureResource(resource Resource) *AzureResource {
 	azureResource := new(AzureResource)
 	azureResource.Resource = resource
@@ -196,10 +292,20 @@ func (r AzureResource) GetName() string {
 func (r AzureResource) GetResource(key string) Resource {
 	return r.Resource[key].(Resource)
 }
+
 func (r AzureResource) GetTags() Resource {
 	return r.GetResource("tags")
 }
+
 func (r AzureResource) GetLevel() string {
 	tags := r.GetTags()
 	return tags["level"].(string)
+}
+
+func (r AzureResource) GetHostName() string {
+	return r.GetString("default_site_hostname")
+}
+
+func (r AzureResource) GetID() string {
+	return r.GetString("id")
 }
