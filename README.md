@@ -1,10 +1,13 @@
-# Terratest helper for CAF
+# Terratest helper for Azure Terraform SRE
 
-This library contains helper methods that are useful when testing infrastructure deployed with [Cloud Adoption Framework for Azure landing zones on Terraform.](https://github.com/azure/caf-terraform-landingzones)
+> :warning: This solution, offered by the Open-Source community, will no longer receive contributions from Microsoft.
+
+This library contains helper methods that are useful when testing infrastructure deployed with [Azure Terraform SRE.](https://github.com/aztfmod/caf-terraform-landingzones)
 
 The  helper methods provide an easy way to extract resource information from terraform state files. This makes easy to create dynamic tests that source resource names from Terraform state.
 
 Example:
+
 ```go
 
 import "github.com/aztfmod/terratest-helper-caf/state"
@@ -29,9 +32,9 @@ func TestLaunchpadResourceGroupIsExists(t *testing.T) {
 * `go get`
 * Create CAF Tests
 
-## CAF Test structure
+## Azure Terraform SRE Test structure
 
-CAF Tests consist of reading resource information from the state file and then using Terratest helpers to assert the existence of resource and the correct configuration.
+Azure Terraform SRE Tests consist of reading resource information from the state file and then using Terratest helpers to assert the existence of resource and the correct configuration.
 
 In order bo build a test, start with definting a new tfState object by invoking
 
@@ -71,9 +74,9 @@ rover test \
 
 ### Option 2 - Debugging or cli invocation of go test
 
-- Download your state file from azure blob storage.
-- Rename the file to terraform.tfstate and place it in a known location.
-- create a .env file in the tests folder with the following structure
+* Download your state file from azure blob storage.
+* Rename the file to terraform.tfstate and place it in a known location.
+* create a .env file in the tests folder with the following structure
 
 ```shell
  STATE_FILE_PATH=<path to state file>
@@ -123,4 +126,4 @@ For examples of writing Tests, please see the [Symphony Reference application te
 References:
 
 * [Terratest](https://github.com/gruntwork-io/terratest)
-* [Cloud Adoption Framework for Azure landing zones on Terraform.](https://github.com/azure/caf-terraform-landingzones)
+* [Azure Terraform SRE](https://github.com/aztfmod/caf-terraform-landingzones)
